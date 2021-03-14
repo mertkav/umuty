@@ -1,0 +1,164 @@
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+import csv
+from time import sleep
+from random import randint
+from selenium import webdriver
+from collections import namedtuple
+
+tum_list = []
+
+#baslıklar
+anaList = ["site", "page", "position", "company", "qualification", "Askerlik durumu", "Tecrube", "egitim seviyesi",
+           "firma sektoru", "universite bolumu", "departman", "calisma sekli", "pozisyon seviyesi", "personel sayisi",
+           "ulke/sehir"]
+
+
+tum_list.append(anaList)
+
+pages = np.arange(866019, 866022, 1)
+
+driver = webdriver.Chrome(executable_path= "/Users/mert/Desktop/chromedriver")
+
+for page in pages:
+    my_List = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+    my_List[0] = "www.elemanonline.com.tr"
+
+    page = "https://www.elemanonline.com.tr/fotokopi-yazici-teknisyeni_i" + str(page) + ".html"
+
+    driver.get(page)
+
+    my_List[1] = str(page)
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    table_1 = soup.find_all("div", class_=["col-lg-10 col-xs-12"])
+
+    table_2 = soup.find_all("div", class_=["col-lg-9 col-xs-12"])
+
+    table_3 = soup.find_all("ul", class_=["ilan_bilgi_ozet"])
+
+
+    for box_1_1 in table_1:
+
+        try:
+
+            position = box_1_1.find("h4", {"class":"mb-5"}).text
+
+        except:
+            continue
+
+        my_List[2] = position
+
+
+    for box_1_2 in table_1:
+
+        try:
+
+            company = box_1_2.find("h6", {"class": "mb-5"}).text
+
+        except:
+
+            continue
+
+        my_List[3]= company
+
+
+    for box_2_1 in table_2:
+
+        try:
+
+            qualification = box_2_1.find("div", {"id":"ilan_metni"}).text
+
+        except:
+            continue
+
+
+        my_List[4] = qualification
+
+
+    for box_2_2 in table_3:
+
+        try:
+
+            degisken_3 = box_2_2.find_all("dd")[0].text
+
+            deger_3 = box_2_2.find_all("dt")[0].text
+
+            if degisken_3 == "Şehir / İlçe":
+                my_List[14] = deger_3
+            elif degisken_3 == "Kategori":
+                my_List[10] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_2_2 in table_3:
+
+        try:
+
+            degisken_3 = box_2_2.find_all("dd")[1].text
+
+            deger_3 = box_2_2.find_all("dt")[1].text
+
+            if degisken_3 == "Şehir / İlçe":
+                my_List[14] = deger_3
+            elif degisken_3 == "Kategori":
+                my_List[10] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_2_2 in table_3:
+
+        try:
+
+            degisken_3 = box_2_2.find_all("dd")[2].text
+
+            deger_3 = box_2_2.find_all("dt")[2].text
+
+            if degisken_3 == "Şehir / İlçe":
+                my_List[14] = deger_3
+            elif degisken_3 == "Kategori":
+                my_List[10] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+
+            else:
+                " "
+
+        except:
+            continue
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    print(my_List)
+
+driver.quit()

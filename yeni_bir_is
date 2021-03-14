@@ -1,0 +1,193 @@
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+import csv
+from time import sleep
+from random import randint
+from selenium import webdriver
+from collections import namedtuple
+
+
+tum_list = []
+
+#baslıklar
+anaList = ["site", "page", "position", "company", "qualification", "Askerlik durumu", "Tecrube", "egitim seviyesi",
+           "firma sektoru", "universite bolumu", "departman", "calisma sekli", "pozisyon seviyesi", "personel sayisi",
+           "ulke/sehir"]
+
+tum_list.append(anaList)
+
+pages = np.arange(927709, 927711, 1)
+
+driver = webdriver.Chrome(executable_path= "/Users/mert/Desktop/chromedriver")
+
+for page in pages:
+    my_List = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+    my_List[0] = "www.yenibiris.com"
+
+    page = "https://www.yenibiris.com/is-ilani/a/" + str(page)
+
+    driver.get(page)
+
+    my_List[1] = str(page)
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    table_1 = soup.find_all("div", class_= ["detailHeader borderBox"])
+
+    table_2 = soup.find_all("div", class_= ["detailHeader borderBox"])
+
+    table_3 = soup.find_all("div", class_= ["col-lg-8 col-md-8 leftColumnForLarge"] )
+
+    table_4 = soup.find_all("div", class_= ["well additionInfos mb0 borderBox"] )
+
+
+    for general_info in table_1 :
+
+        position = general_info.find("div", class_= ["row"]).h1.get_text() if general_info.find("div", class_= ["row"]).h1.get_text() \
+            else ""
+
+        my_List[2] = position
+
+
+    for name in table_2 :
+
+        company= general_info.find("div", class_= ["companyTitle"]).a.get_text() if general_info.find("div", class_= ["companyTitle"]).a.get_text() \
+            else ""
+
+        my_List[3] = company
+
+
+    for job_requirements in table_3 :
+
+        requirements = job_requirements.find("div", class_ = ["well mb0 mainInfos"] ).get_text() if job_requirements.find("div", class_ = ["well mb0 mainInfos"]).get_text() \
+            else ""
+
+        my_List[4] = requirements
+
+
+    for list_unstyled in table_4:
+
+        short_info = list_unstyled.find("ul", class_="list-unstyled")
+
+        for degisken_4 in short_info.select("li label") :
+            print(degisken_4.text)
+
+            degisken_4 = degisken_4.get_text()
+
+            print(type(degisken_4))
+
+        for deger_4 in short_info.select("li span") :
+            print(deger_4.text)
+
+
+
+            deger_4 = deger_4.get_text()
+
+
+
+        if degisken_4 == "Sektör" :
+          my_List[8] = deger_4
+        elif degisken_4 == "Kategori":
+           my_List[10] = deger_4
+        elif degisken_4 == "Çalışma Şekli":
+            my_List[11] = deger_4
+        elif degisken_4 == "Pozisyon Seviyesi":
+            my_List[12] = deger_4
+        elif degisken_4 == "Çalışma Yeri":
+            my_List[14] = deger_4
+        elif degisken_4 == "Deneyim":
+            my_List[6] = deger_4
+        else:
+            " "
+
+        print(my_List)
+
+
+
+
+
+
+
+        #for row in short_info:
+
+            #degisken_4 = row.find("label")
+
+
+
+
+
+
+
+        #deger_4 = list_unstyled.find_all("ul", class_="list-unstyled")
+
+#        for deger in deger_4:
+
+#            d_4_2= deger.find("")
+
+
+
+       # print(deger_4)
+
+
+
+
+        #print(degisken_4)
+        #print(deger_4)
+
+        #for short in all_list:
+
+            #degisken_4= short.find(class_="col-lg-3 col-md-3 col-sm-3 col-xs-12").get_text()
+
+            #print(degisken_4)
+
+
+
+
+    #    print(all_list)
+
+
+       # for short_info in all_list :
+         #   degisken_4 = short_info.find(class_= ).li.label.get_text()
+         #   deger_4 = short_info.find().a.get_text()
+
+           # print(degisken_4)
+           # print(deger_4)
+
+
+        #if degisken_4 == "Sektör" :
+         #   my_List[8] = deger_4
+        #elif degisken_4 == "Kategori":
+         #   my_List[10] = deger_4
+        #elif degisken_4 == "Çalışma Şekli":
+        #    my_List[11] = deger_4
+        #elif degisken_4 == "Pozisyon Seviyesi":
+        #    my_List[12] = deger_4
+        #elif degisken_4 == "Çalışma Yeri":
+        #    my_List[14] = deger_4
+        #elif degisken_4 == "Deneyim":
+        #    my_List[6] = deger_4
+        #else:
+        #    " "
+
+
+    tum_list.append(my_List)
+
+
+driver.quit()
+
+with open("outputFile.csv", "w") as f:
+    for row in tum_list:
+
+        seperator = "|"
+
+        text = seperator.join(row)
+        #print(text)
+        f.write(text + "\r\n")
+
+
+
+
+   #         print(degisken_1)

@@ -1,0 +1,164 @@
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+import csv
+from time import sleep
+from random import randint
+from selenium import webdriver
+from collections import namedtuple
+import pandas as pd
+
+
+tum_list = []
+#baslıklar
+anaList = ["site", "page", "position", "company", "qualification", "Askerlik durumu", "Tecrube", "egitim seviyesi",
+           "firma sektoru", "universite bolumu", "departman", "calisma sekli", "pozisyon seviyesi", "personel sayısı",
+           "ulke/sehir", "yabancı dil", "military status"]
+
+tum_list.append(anaList)
+
+pages = np.arange(2619180, 2619183, 1)
+
+driver = webdriver.Chrome(executable_path= "/Users/mert/Desktop/chromedriver")
+
+for page in pages:
+    my_List = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+    my_List[0] = "kariyer.net"
+
+    page = "https://www.kariyer.net/is-ilani/a-" + str(page)
+
+    driver.get(page)
+
+    my_List[1] = str(page)
+
+    #sleep(randint(2,10))
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    my_table_1 = soup.find_all("div", {"class":"ilan-ozet"})
+
+    my_table_2 = soup.find_all(class_=["three-cols"])
+
+    my_table_3 = soup.find_all(class_=["content knetLoadingWrapper"])
+
+    #my_table_4 = soup.find_all(class_=["sub-box pozisyon-bilgileri"])
+
+
+    for container in my_table_1:
+
+
+        position = container.find("div", {"class": "ozet"}).a.get_text() if container.find("div", {"class": "ozet"}).a.get_text() \
+            else ""
+        my_List[2] = position
+        company = container.find("div", {"class": "ozet"}).find_next("a").find_next("a").get_text() if container.find("div", {"class": "ozet"}).find_next("a").find_next("a").get_text() \
+            else ""
+        my_List[3] = company
+
+
+
+
+
+    for container in my_table_2:
+
+        qualification= container.find_all("div", class_="genel-bilgiler genel-bilgiler-text-block")
+
+        for first_part in qualification:
+
+            degisken_2 = first_part.find(class_="genel-nitelikler").get_text() if first_part.find(class_="genel-nitelikler").get_text() \
+                else ""
+
+            my_List[4] = degisken_2
+
+
+
+
+            #deger_2_1 = first_part.find(class_="genel-nitelikler").p.get_text()
+            #deger_2_2 = first_part.find(class_="genel-nitelikler").ul.get_text()
+
+
+
+
+
+
+
+
+
+
+
+    for container in my_table_3:
+
+        criteria = container.find_all("div", class_= ["row"] )
+
+        for row in criteria:
+
+            degisken_3 = row.find(class_= ["col-4"] ).p.strong.get_text()
+            deger_3= row.find(class_= ["col-12"]).p.get_text()
+
+            print(degisken_3)
+            print(type(degisken_3))
+            print(deger_3)
+            if degisken_3 == "Askerlik Durumu:":
+                my_List[5] = deger_3
+            if degisken_3 == "Military Status:":
+                my_List[5] = deger_3
+            elif degisken_3 == "Tecrübe:":
+                my_List[6] = deger_3
+            elif degisken_3 == "Eğitim Seviyesi:":
+                my_List[7] = deger_3
+
+            elif degisken_3 == "Firma Sektörü:":
+                my_List[8] = deger_3
+            elif degisken_3 == "Üniversite Bölümü:":
+                my_List[9] = deger_3
+            elif degisken_3 == "Departman:":
+                my_List[10] = deger_3
+            elif degisken_3 == "Çalışma Şekli :":
+                my_List[11] = deger_3
+            elif degisken_3 == "Pozisyon Seviyesi:":
+                my_List[12] = deger_3
+            elif degisken_3 == "Personel Sayısı:":
+                my_List[13] = deger_3
+            elif degisken_3 == "Ülke/Şehir:":
+                my_List[14] = deger_3
+            elif degisken_3 == "Yabancı Dil:":
+                my_List[15] = deger_3
+
+
+
+
+            else:
+                 " "
+
+
+    tum_list.append(my_List)
+
+
+    #with open("outputFile.csv", newline="") as f:
+
+        #r = csv.reader(f)
+        #data = [line for line in r]
+driver.quit()
+with open("outputFile.csv", "w") as f:
+
+    for row in tum_list:
+
+
+        seperator = "|"
+
+        text = seperator.join(row)
+        print(text)
+        f.write(text + "\r\n")
+        #w.writerow(["site", "page", "position", "company", "qualification", "Askerlik durumu", "Tecrube", "egitim seviyesi",
+             #            "firma sektoru", "üniversite bölümü", "departman", "çalışma şekli", "pozisyon seviyesi", "personel sayısı",
+              #           "ülke/şehir"])
+
+
+           # with open("kariyer_net.csv", "a", newline="") as csvfile:
+
+              #  for roww in my_List:
+               #     writer = csv.writer(csvfile, delimiter= ",")
+                #    writer.writerow(roww)
+
+

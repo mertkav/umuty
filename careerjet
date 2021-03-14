@@ -1,0 +1,136 @@
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+import csv
+from time import sleep
+from random import randint
+from selenium import webdriver
+from collections import namedtuple
+
+tum_list = []
+
+#baslıklar
+anaList = ["site", "page", "position", "company", "qualification", "Askerlik durumu", "Tecrube", "egitim seviyesi",
+           "firma sektoru", "universite bolumu", "departman", "calisma sekli", "pozisyon seviyesi", "personel sayisi",
+           "ulke/sehir"]
+
+
+tum_list.append(anaList)
+
+pages = np.arange(1, 2, 1)
+
+driver = webdriver.Chrome(executable_path= "/Users/mert/Desktop/chromedriver")
+
+for page in pages:
+    my_List = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+    my_List[0] = "www.careerjet.com.tr"
+
+    page = "https://www.careerjet.com.tr/isler-turkiye-121260.html?p=" + str(page)
+
+    driver.get(page)
+
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    link_box = soup.find_all(class_= "job clicky")
+
+    for links in link_box:
+
+        link = links.a["href"]
+
+        page_link = "https://www.careerjet.com.tr/" + link
+
+        driver.get(page_link)
+
+
+
+        soup_1 = BeautifulSoup(driver.page_source, "html.parser")
+
+        table_1 = soup_1.find("div", {"class":"container"})
+
+        table_2 = soup_1.find("ul", {"class":"details"})
+
+        table_3 = soup_1.find(class_= ["content"]).text
+
+
+        for box_1_1 in table_1:
+
+            try:
+                position = box_1_1.find_all("h1")[0].text
+
+            except:
+                continue
+
+            my_List[2] = position
+
+        for box_1_2 in table_1:
+
+            try:
+
+                company = box_1_2.find("p", {"class":"company"}).text
+
+            except:
+                continue
+
+            my_List[3] = company
+
+
+        for box_1_3 in table_2:
+
+            try:
+
+                city = box_1_3.find_all("span")[0].text
+
+            except:
+                continue
+
+            my_List[14] = city
+
+        for box_1_4 in table_2:
+
+            try:
+
+                calisma_sekli = box_1_4.find_all("li")[1]
+
+            except:
+
+                continue
+
+            my_List[6] = calisma_sekli
+
+
+        my_List[4] = table_3
+
+
+
+        print(my_List)
+
+
+
+
+
+
+
+
+driver.quit()
+
+
+with open("outputFile.csv", "w") as f:
+    for row in tum_list:
+
+        seperator = "|"
+
+        text = seperator.join(row)
+        #print(text)
+        f.write(text + "\r\n")
+
+
+
+
+
+
+
+
+

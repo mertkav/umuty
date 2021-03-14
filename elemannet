@@ -1,0 +1,112 @@
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+import csv
+from time import sleep
+from random import randint
+from selenium import webdriver
+from collections import namedtuple
+
+tum_list = []
+
+#baslıklar
+anaList = ["site", "page", "position", "company", "qualification", "Askerlik durumu", "Tecrube", "egitim seviyesi",
+           "firma sektoru", "universite bolumu", "departman", "calisma sekli", "pozisyon seviyesi", "personel sayisi",
+           "ulke/sehir"]
+
+
+tum_list.append(anaList)
+
+pages = np.arange(2946939, 2946942, 1)
+
+driver = webdriver.Chrome(executable_path= "/Users/mert/Desktop/chromedriver")
+
+for page in pages:
+
+    my_List = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+    my_List[0] = "www.eleman.net"
+
+    page = "https://www.eleman.net/is-ilani/makine-tasarim-muhendisi-i" + str(page)
+
+    driver.get(page)
+
+    my_List[1] = str(page)
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    table_1 = soup.find_all("div", class_=["c-box__header no_pad_header"])
+
+
+    table_2 = soup.find_all("div", class_=["c-box__body"])
+
+
+    for box_1_1 in table_1:
+
+        try:
+
+            position = box_1_1.find("h1", {"class":"h3 u-clear-gap-bottom u-text-ilan-baslik"}).text
+
+        except:
+            continue
+
+        my_List[2] = position
+
+
+    for box_1_2 in table_1:
+
+        try:
+
+            company = box_1_2.find_all("span", {"class": "notranslate"})[0].text
+
+        except:
+            continue
+
+        my_List[3] = company
+
+    for box_1_3 in table_1:
+
+        try:
+
+            city = box_1_3.find_all("span", {"class": "notranslate"})[1].text
+
+        except:
+            continue
+
+
+        my_List[14]=city
+
+
+    for box_2_1 in table_2:
+
+        try:
+
+            qualification = box_2_1.find("div", {"class":"d-information"}).text
+
+        except:
+            continue
+
+        my_List[4] = qualification
+
+
+
+
+
+
+
+
+
+
+    print(my_List)
+
+driver.quit()
+
+with open("outputFile.csv", "w") as f:
+    for row in tum_list:
+
+        seperator = "|"
+
+        text = seperator.join(row)
+        #print(text)
+        f.write(text + "\r\n")

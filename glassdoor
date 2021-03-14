@@ -1,0 +1,172 @@
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+import csv
+from time import sleep
+from random import randint
+from selenium import webdriver
+from collections import namedtuple
+
+tum_list = []
+
+#baslıklar
+anaList = ["site", "page", "position", "company", "qualification", "Askerlik durumu", "Tecrube", "egitim seviyesi",
+           "firma sektoru", "universite bolumu", "departman", "calisma sekli", "pozisyon seviyesi", "personel sayisi",
+           "ulke/sehir"]
+
+
+tum_list.append(anaList)
+
+pages = np.arange(3781351222, 3781351223, 1)
+
+driver = webdriver.Chrome(executable_path= "/Users/mert/Desktop/chromedriver")
+
+for page in pages:
+    my_List = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+    my_List[0] = "www.glassdoor.com"
+
+    page = "https://www.glassdoor.com/job-listing/service-delivery-manager-philips-JV_IC3346431_KO0,24_KE25,32.htm?jl=" + str(page)
+
+    driver.get(page)
+
+    my_List[1] = str(page)
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    table_1 = soup.find_all("div", class_=["css-ur1szg e11nt52q0"])
+
+    table_2 = soup.find_all("div", class_=["css-1hb8zec e1juszzg2"])
+
+    table_3 = soup.find_all("div", class_=["css-1hb8zec e1juszzg2"])
+
+    table_4 = soup.find_all("div", class_=["css-1hb8zec e1juszzg2"])
+
+
+    table_5 = soup.find("div", class_=["css-1u73slt e18tf5om2"])
+
+
+    table_6 = soup.find("div", class_=["desc css-58vpdc ecgq1xb4"]).text
+
+    my_List[4] = table_6
+
+
+    for box_1 in table_1 :
+
+        company = box_1.find("div", class_= ["css-16nw49e e11nt52q1"]).get_text() if box_1.find("div", class_= ["css-16nw49e e11nt52q1"]).get_text() \
+            else ""
+
+        my_List[3] = company
+
+        position = box_1.find("div", class_=["css-17x2pwl e11nt52q6"]).get_text() if box_1.find("div",
+                                                                                                             class_=[
+                                                                                                                 "css-17x2pwl e11nt52q6"]).get_text() \
+            else ""
+
+        my_List[2] = position
+
+        city = box_1.find("div", class_=["css-1v5elnn e11nt52q2"]).get_text() if box_1.find("div",
+                                                                                                              class_=[
+                                                                                                                  "css-1v5elnn e11nt52q2"]).get_text() \
+            else ""
+
+        my_List[14] = city
+
+
+
+
+
+
+
+
+    for box_2_0 in table_2:
+
+        try:
+
+            job_type = box_2_0.find("span", {"class": 'css-sr4ps0 e1juszzg4'}).text
+
+
+        except:
+            continue
+
+
+        my_List[10] = job_type
+
+
+    for box_2_1 in table_3:
+
+        try:
+
+            job_function = box_2_1.find_all("span", {"class":'css-o4d739 e1juszzg4' })[0].text
+
+        except:
+            continue
+
+
+        my_List[12]= job_function
+
+
+    for box_2_2 in table_2:
+
+        try:
+
+            industry = box_2_2.find_all("span", {"class": "css-sr4ps0 e1juszzg4"})[1].text
+
+        except:
+            continue
+
+        my_List[8] = industry
+
+
+    for box_2_3 in table_4:
+
+        try:
+
+            size = box_2_3.find_all("span", {"class": "css-sr4ps0 e1juszzg4"})[2].text
+
+        except:
+
+            continue
+
+
+        my_List[13] = size
+
+
+    for box_1_2 in table_1:
+
+        try:
+
+            city= box_1_2.find("div", {"class": "css-1v5elnn e11nt52q2"}).text
+
+        except:
+            continue
+
+        my_List[14] = city
+
+    tum_list.append(my_List)
+
+   
+    driver.quit()
+    with open("outputFile.csv", "w") as f:
+
+        for row in tum_list:
+            seperator = "|"
+
+            text = seperator.join(row)
+            print(text)
+            f.write(text + "\r\n")
+
+
+
+
+
+
+
+
+
+
+    print(my_List)
+
+
+driver.quit()

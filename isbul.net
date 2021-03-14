@@ -1,0 +1,680 @@
+import requests
+from requests import get
+from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
+import csv
+from time import sleep
+from random import randint
+from selenium import webdriver
+from collections import namedtuple
+
+tum_list = []
+
+#baslıklar
+anaList = ["site", "page", "position", "company", "qualification", "Askerlik durumu", "Tecrube", "egitim seviyesi",
+           "firma sektoru", "universite bolumu", "departman", "calisma sekli", "pozisyon seviyesi", "personel sayisi",
+           "ulke/sehir"]
+
+
+tum_list.append(anaList)
+
+pages = np.arange(251521, 251525, 1)
+
+driver = webdriver.Chrome(executable_path= "/Users/mert/Desktop/chromedriver")
+
+for page in pages:
+    my_List = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+    my_List[0] = "www.isbul.net"
+
+    page = "https://www.isbul.net/fikir-fabrikasi/cay-servis-ve-temizlik-elemani-is-ilani-" + str(page)
+
+    driver.get(page)
+
+    my_List[1] = str(page)
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+
+
+    table_1 = soup.find_all("div", class_=["centerfix padding20 job-detail-wrap-title-wrap"])
+
+    table_2 = soup.find_all("div", class_=["centerfix padding20 job-detail-wrap-job-content detail-content-mobile"])
+
+
+    table_3 = soup.find_all("ul", class_=["job-detail-wrap-job-content-extra-list"])
+
+    table_4 = soup.find_all("div", class_=["job-detail-wrap-job-content-extra-list"])
+
+
+    for box_1 in table_1:
+
+        try:
+
+            position = box_1.find("h1", {"class":"detail-companytitle"}).text
+
+        except:
+            continue
+
+        my_List[2]= position
+
+
+
+
+
+    for box_1_2 in table_1:
+
+        try:
+
+            company = box_1_2.find("h2").a.text
+
+        except:
+            continue
+
+
+        my_List[3] = company
+
+    for box_2_1 in table_2:
+
+        try:
+
+            aranan_nitelikler = box_2_1.find_all("div", {"class": "title-content"})[1].text
+
+        except:
+            continue
+
+        my_List[3] = aranan_nitelikler
+
+
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[0].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[0].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[1].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[1].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[2].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[2].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[3].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[3].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[4].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[4].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[5].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[5].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[6].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[6].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[7].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[7].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[7].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[7].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[8].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[8].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[9].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[9].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[10].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[10].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[11].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[11].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[12].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[12].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[13].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[13].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+
+    for box_3_1 in table_3:
+
+        try:
+
+            degisken_3 = box_3_1.find_all("div", class_=["text subtitle-content"])[14].text
+
+            deger_3 = box_3_1.find_all("div", class_=["value"])[14].text
+
+            if degisken_3 == "Pozisyon":
+                my_List[12] = deger_3
+            elif degisken_3 == "İş Alanı":
+                my_List[10] = deger_3
+            elif degisken_3 == "Sektör":
+                my_List[8] = deger_3
+            elif degisken_3 == "Çalışma Şekli":
+                my_List[11] = deger_3
+            elif degisken_3 == "Eğitim Durumu":
+                my_List[7] = deger_3
+            elif degisken_3 == "Deneyim":
+                my_List[6] = deger_3
+            elif degisken_3 == "Askerlik Durumu":
+                my_List[5] = deger_3
+            elif degisken_3 == "Çalışma Yeri":
+                my_List[14] = deger_3
+
+
+
+
+            else:
+                " "
+
+        except:
+            continue
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    print(my_List)
+
+
+
+
+
+driver.quit()
+
+with open("outputFile.csv", "w") as f:
+    for row in tum_list:
+
+        seperator = "|"
+
+        text = seperator.join(row)
+        #print(text)
+        f.write(text + "\r\n")
